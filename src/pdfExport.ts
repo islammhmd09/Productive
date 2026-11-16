@@ -11,7 +11,7 @@ export function exportJournalsToPDF(entries: JournalEntry[], lang: Lang, t: Reco
   const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
 
   const isRtl = lang === 'ar';
-  const printTitle = isRtl ? 'يومياتي - تصدير PDF' : 'Daily Journal - PDF Export';
+  const printTitle = isRtl ? 'إنتاجية - تصدير PDF' : 'Productive - PDF Export';
 
   const htmlContent = `
 <!DOCTYPE html>

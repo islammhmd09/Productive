@@ -2,7 +2,12 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Lang } from './types';
 
 const en = {
-  appName: 'Daily Journal',
+  appName: 'Productive',
+  appTagline: 'Master your day, build lasting habits, and reflect with clarity.',
+  todayProductivity: "Today's Productivity",
+  startTasks: 'Start Tasks',
+  logHabit: 'Track Habits',
+  dailyReflection: 'Daily Reflection',
   otherLang: 'العربية',
   greetMorning: 'Good morning',
   greetAfternoon: 'Good afternoon',
@@ -163,7 +168,12 @@ const en = {
 export type Dict = typeof en;
 
 const ar: Dict = {
-  appName: 'يومياتي',
+  appName: 'إنتاجية',
+  appTagline: 'أتقن يومك، ابنِ عادات تدوم، ودوّن إنجازاتك بوضوح.',
+  todayProductivity: 'إنتاجية اليوم',
+  startTasks: 'ابدأ المهام',
+  logHabit: 'تتبع العادات',
+  dailyReflection: 'التأمل اليومي',
   otherLang: 'English',
   greetMorning: 'صباح الخير',
   greetAfternoon: 'نهارك سعيد',

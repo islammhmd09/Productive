@@ -1,6 +1,6 @@
 {
-  "name": "Daily Journal | يومياتي",
-  "short_name": "Journal",
+  "name": "Productive | إنتاجية",
+  "short_name": "Productive",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

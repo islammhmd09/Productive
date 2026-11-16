@@ -36,7 +36,7 @@ export async function getUncompletedTasks(): Promise<Task[]> {
 
 /** Build the custom message required by the user */
 export function buildReminderMessage(uncompleted: Task[]): { title: string; body: string } {
-  const title = 'Daily Journal – Task Reminder';
+  const title = 'Productive – Task Reminder';
 
   if (uncompleted.length === 0) {
     return {
