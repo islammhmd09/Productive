@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from '../i18n';
 import { journalRepo } from '../storage';
-import { exportBackup, parseBackup } from '../backup';
-import { MOODS, fill, formatDate, formatMonth } from '../utils';
+import { exportJournalsToPDF } from '../pdfExport';
+import { MOODS, formatDate, formatMonth } from '../utils';
 import type { JournalEntry } from '../types';
 
 function Block({ title, text }: { title: string; text: string }) {
@@ -19,7 +19,6 @@ export function History() {
   const { t, lang } = useI18n();
   const [entries, setEntries] = useState<JournalEntry[] | null>(null);
   const [query, setQuery] = useState('');
-  const [note, setNote] = useState('');
 
   const load = () => journalRepo.list().then(setEntries).catch(() => setEntries([]));
   useEffect(() => { void load(); }, []);
@@ -44,26 +43,34 @@ export function History() {
     await load();
   }
 
-  async function onImport(ev: ChangeEvent<HTMLInputElement>) {
-    const file = ev.target.files?.[0];
-    ev.target.value = '';
-    if (!file) return;
-    try {
-      const list = parseBackup(await file.text());
-      if (!list.length) throw new Error('empty');
-      await journalRepo.putMany(list);
-      await load();
-      setNote(fill(t.importDone, { n: list.length }));
-    } catch {
-      setNote(t.importFail);
-    }
+  function handleExportPDF() {
+    if (!entries || entries.length === 0) return;
+    exportJournalsToPDF(entries, lang, t);
   }
 
   return (
     <section>
-      <h1>{t.historyTitle}</h1>
-      <input type="search" placeholder={t.search} aria-label={t.search} value={query}
-        onChange={(e) => setQuery(e.target.value)} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+        <h1>{t.historyTitle}</h1>
+        {entries && entries.length > 0 && (
+          <button
+            type="button"
+            className="btn ghost small"
+            onClick={handleExportPDF}
+            title={t.exportPdfBtn}
+          >
+            📄 {t.exportPdfBtn}
+          </button>
+        )}
+      </div>
+
+      <input
+        type="search"
+        placeholder={t.search}
+        aria-label={t.search}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
 
       {entries === null && <p className="muted">{t.loading}</p>}
       {entries?.length === 0 && (
@@ -98,17 +105,6 @@ export function History() {
           ))}
         </div>
       ))}
-
-      <div className="tools">
-        <button className="btn ghost small" disabled={!entries?.length} onClick={() => entries && exportBackup(entries)}>
-          {t.exportBtn}
-        </button>
-        <label className="btn ghost small">
-          {t.importBtn}
-          <input type="file" accept="application/json,.json" hidden onChange={(e) => void onImport(e)} />
-        </label>
-      </div>
-      <p className="msg" role="status">{note}</p>
     </section>
   );
 }

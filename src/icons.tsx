@@ -33,3 +33,25 @@ export const FlameIcon = icon(<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2
 
 // X/Close icon
 export const XIcon = icon(<><path d="M18 6 6 18" /><path d="M6 6l12 12" /></>);
+
+// Main App Logo (Crescent Moon)
+export function AppLogo({ size = 30, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      className={className}
+      aria-hidden="true"
+      style={{ flexShrink: 0, display: 'inline-block', verticalAlign: 'middle' }}
+    >
+      <defs>
+        <mask id="app-logo-crescent">
+          <rect width="64" height="64" fill="#ffffff" />
+          <circle cx="40" cy="26" r="18" fill="#000000" />
+        </mask>
+      </defs>
+      <circle cx="30" cy="32" r="22" fill="var(--g3, #4ade80)" mask="url(#app-logo-crescent)" />
+    </svg>
+  );
+}

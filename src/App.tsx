@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useI18n } from './i18n';
 import { useDataVersion, useSyncState } from './sync';
-import { BookIcon, ChecklistIcon, CloudIcon, GearIcon, TargetIcon } from './icons';
+import { AppLogo, BookIcon, ChecklistIcon, CloudIcon, GearIcon, TargetIcon } from './icons';
 import { Home } from './screens/Home';
 import { Write } from './screens/Write';
 import { History } from './screens/History';
@@ -46,7 +46,10 @@ export function App() {
   return (
     <div className="app">
       <header className="bar">
-        <a className="brand" href="#/">{t.appName}</a>
+        <a className="brand" href="#/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <AppLogo size={28} />
+          <span>{t.appName}</span>
+        </a>
         <nav>
           {navIcon('#/history', page === 'history' || page === 'write', t.history, <BookIcon />)}
           {navIcon('#/tasks', page === 'tasks', t.navTasks, <ChecklistIcon />)}

@@ -1,41 +1,134 @@
 # Daily Journal | يومياتي
 
-React + TypeScript + Vite. English/Arabic (RTL), one font (Cairo), installable PWA.
+A serene, local-first personal productivity and reflection web application built with **React 18**, **TypeScript**, and **Vite**. Features full bilingual support (**English** & **العربية** with native RTL layout), Cairo typography, offline persistence, and installable PWA capabilities.
 
-## Run
-    npm install
-    npm run dev          # http://localhost:5173
-    npm run build        # type-check + production build into dist/
+---
 
-## Deploy (Vercel)
-Push to GitHub, import the repo in Vercel, keep the defaults (Vite is auto-detected).
+## ✨ Features
 
-## Install as an app
-- Windows: open the site in Edge/Chrome, click the install icon in the address bar.
-- Android: Chrome menu, then "Install app" / "Add to Home screen".
+### 📖 Daily Journaling
+- **Guided Prompts**: Reflect on your day, track your feelings, write freely, and practice self-forgiveness.
+- **Mood Tracking**: 5-point daily rating with intuitive mood emojis.
+- **Journal History**: Browse, search, and view your reflections grouped by month.
+- **Privacy First**: All journals are saved directly to your device via IndexedDB.
 
-## Where data lives
-Journals are saved in IndexedDB on each device (private, works offline).
-To move journals between devices use History, Export/Import backup.
-For automatic sync, implement `JournalRepository` (src/storage.ts) against a cloud database
-and swap it in for `journalRepo`. No screen needs to change.
+### 📝 To-Do List ("Kick Off Your Day")
+- **Flexible Scheduling**: Single daily tasks, time slots (`From` – `To`), project/group labels, and long-term pinned tasks.
+- **Tri-State Progress**: Not started (`todo`), partly done (`partial`), and done (`done`).
+- **Live Progress**: Progress bar calculating completed and partial tasks.
+- **Custom Color Accents**: Customize your task checkboxes and theme colors.
 
-## Structure
-    src/types.ts        data model
-    src/storage.ts      storage interface + IndexedDB implementation
-    src/backup.ts       JSON export/import
-    src/i18n.tsx        EN/AR text, language + direction
-    src/screens/        Home, Write, History
-    public/             manifest, service worker, icons
+### 🎯 Habit Tracker
+- **Daily Habit Tracking**: Build consistency with customized habits (emojis & colors).
+- **Interactive 7-Day Matrix**: 1-click toggle for today or any of the past 7 days.
+- **Streak Records**: Live streak counter (`🔥`) tracking your current consecutive days and best record.
+- **Monthly Analytics**: Real-time completion rate percentage for the current month.
 
-## Add a feature
-New screen: add a file in src/screens/ and a route line in src/App.tsx.
-New field: add it to JournalEntry, Write.tsx, History.tsx and both dictionaries.
-New language: add a dictionary in i18n.tsx and extend the Lang type.
+### 🔔 Smart Task Reminders & Notifications
+- **Automated Alerts**: Receive periodic reminders (default: **every 2 hours**, or custom intervals from 15 mins to 12 hours).
+- **Dynamic Task Summary**: Automatically lists today's uncompleted tasks directly in the reminder notification.
+- **In-App Testing**: Test notification trigger directly from the Settings page.
 
-## v2: To-Do list + cloud sync
-- `#/tasks` Kick Off Your Day: single tasks, project groups, time slots, long-term (daily) tasks, partial/complete status.
-- `#/sync` account + sync. Needs a free Supabase project: run `supabase/schema.sql`, then set
-  `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (see `.env.example`, and in Vercel project settings).
-- Sync is local-first: the app works offline and merges by "latest edit wins". Engine: `src/syncCore.ts` (tested with `npm test`).
-- New feature that should sync? Create its local repository like `src/taskStorage.ts` and call `registerStore('<kind>', ...)`.
+### ⚙️ Settings & Customization
+- **Language Switching**: Seamless transformation between English and Arabic (العربية) with instant RTL/LTR updates.
+- **Appearance (Themes)**: Dark theme (calm forest green palette) and crisp Light theme.
+- **To-Do Accent Personalization**: Choose from Emerald, Teal, Sky Blue, Indigo, Purple, Rose, Amber, or Coral.
+- **Notification Controls**: Enable/disable reminders, request browser permissions, and configure frequencies.
+
+### 📄 PDF Export
+- **Printable Journal Archive**: Export all saved journals into a clean, beautifully formatted **PDF document** with native Cairo Arabic font rendering, print styles, and pagination (no JSON required).
+
+### ☁️ Cloud Sync (Optional)
+- **Local-First Synchronization**: Your data lives locally and syncs automatically with Supabase when online.
+- **Conflict Resolution**: "Latest edit wins" algorithm with tombstone tracking for deleted records.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 18+ or 20+ recommended)
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/islammhmd09/Daily-Journal.git
+
+# Enter the project directory
+cd daily-journal
+
+# Install dependencies
+npm install
+```
+
+### Development
+```bash
+# Start local development server
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Build
+```bash
+# Type check and build production bundle
+npm run build
+```
+
+### Tests
+```bash
+# Run unit tests (Sync engine, Task logic, Habit algorithms)
+npm test
+```
+
+---
+
+## 📁 Project Architecture
+
+```text
+daily-journal/
+├── public/
+│   ├── favicon.svg             # Crescent moon vector icon
+│   ├── manifest.webmanifest    # PWA configuration
+│   └── sw.js                   # Service worker for offline caching
+├── src/
+│   ├── screens/
+│   │   ├── Home.tsx            # Daily overview dashboard & quick-access hub
+│   │   ├── Write.tsx           # Daily journaling screen
+│   │   ├── History.tsx         # Journal history & PDF export
+│   │   ├── Tasks.tsx           # To-Do list with time slots & project groups
+│   │   ├── Habits.tsx          # Professional habit tracker with streaks
+│   │   ├── Settings.tsx        # Settings (Language, Theme, Notifications, PDF)
+│   │   └── Sync.tsx            # Cloud account & sync controls
+│   ├── habitStorage.ts         # IndexedDB repository for habits
+│   ├── habitUtils.ts           # Habit streak & monthly completion algorithms
+│   ├── notificationService.ts  # Browser notifications & task reminder scheduler
+│   ├── pdfExport.ts            # Formatted HTML-to-PDF export engine
+│   ├── settingsStorage.ts      # Settings store & DOM theme applicator
+│   ├── storage.ts              # IndexedDB repository for journals
+│   ├── taskStorage.ts          # IndexedDB repository for tasks
+│   ├── taskUtils.ts            # Task grouping, time sorting, & progress
+│   ├── syncCore.ts             # Deterministic local-first sync engine
+│   ├── sync.ts                 # Supabase sync bridge
+│   ├── i18n.tsx                # English & Arabic dictionaries & RTL provider
+│   ├── icons.tsx               # SVG icons & AppLogo component
+│   ├── types.ts                # TypeScript interfaces & domain models
+│   ├── styles.css              # Custom styling with dark & light themes
+│   ├── App.tsx                 # Hash router & responsive header navigation
+│   └── main.tsx                # Application root with theme initialization
+├── supabase/
+│   └── schema.sql              # Supabase table schema & RLS policies
+├── tests/
+│   └── unit.mjs                # Unit tests for sync engine, tasks, and habits
+└── vite.config.ts              # Vite configuration
+```
+
+---
+
+## 📱 Installing as a PWA
+- **Desktop (Chrome / Edge)**: Click the **Install** icon in the browser address bar.
+- **Mobile (Android / iOS)**: Open in browser and select **"Add to Home Screen"** or **"Install app"**.
+
+---
+
+## 🔒 Privacy & Data
+Daily Journal stores all journals, tasks, habits, and preferences locally in your browser's IndexedDB and localStorage. No data is sent to external servers unless you explicitly sign in to the Cloud Sync feature.
