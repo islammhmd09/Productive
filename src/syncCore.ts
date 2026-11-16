@@ -2,7 +2,7 @@
  * Sync engine: local-first, last-write-wins per record, with tombstones for deletes.
  * Pure logic (no React, no Supabase, no browser globals) so it can be unit-tested.
  */
-export type Kind = 'journal' | 'task';
+export type Kind = 'journal' | 'task' | 'habit';
 export interface Syncable { id: string; updatedAt: string }
 
 export interface LocalStore {

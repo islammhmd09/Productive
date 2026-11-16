@@ -5,6 +5,11 @@ import './styles.css';
 import { App } from './App';
 import { I18nProvider } from './i18n';
 import { initSync } from './sync';
+import { applySettingsToDOM } from './settingsStorage';
+import { startNotificationScheduler } from './notificationService';
+
+// Apply saved theme and custom colors immediately
+applySettingsToDOM();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
 );
 
 initSync(); // cloud sync (does nothing until Supabase keys are configured)
+startNotificationScheduler(); // start reminder intervals if user enabled them
 
 // Ask the browser not to evict saved journals when storage is low.
 void navigator.storage?.persist?.();

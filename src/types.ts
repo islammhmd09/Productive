@@ -1,4 +1,5 @@
 export type Lang = 'en' | 'ar';
+export type Theme = 'dark' | 'light';
 export type Rating = 1 | 2 | 3 | 4 | 5 | null;
 
 export interface JournalEntry {
@@ -28,4 +29,24 @@ export interface Task {
   log: Record<string, TaskStatus>;    // used by long-term tasks: status per day
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Habit {
+  id: string;
+  name: string;
+  color: string;       // Hex or CSS color
+  icon: string;        // Emoji / icon character
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  log: Record<string, boolean>;  // YYYY-MM-DD -> completed
+}
+
+export interface AppSettings {
+  theme: Theme;
+  language: Lang;
+  todoAccentColor: string;     // custom accent color for to-do items
+  notificationsEnabled: boolean;
+  notificationIntervalHours: number; // default 2 hours
+  customReminderTime: string;  // optional daily specific reminder like "09:00" or ''
 }

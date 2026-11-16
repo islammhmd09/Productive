@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { journalRepo } from '../storage';
 import { fill } from '../utils';
+import { ChecklistIcon, GearIcon, TargetIcon } from '../icons';
 
 export function Home() {
   const { t } = useI18n();
@@ -32,6 +33,22 @@ export function Home() {
       <blockquote>{phrase}</blockquote>
       <a className="btn big" href="#/write">{t.newJournal}</a>
       <a className="link" href="#/history">{t.history}</a>
+
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginTop: 12 }}>
+        <a className="btn ghost small" href="#/tasks">
+          <ChecklistIcon width={16} height={16} />
+          {t.navTasks}
+        </a>
+        <a className="btn ghost small" href="#/habits">
+          <TargetIcon width={16} height={16} />
+          {t.navHabits}
+        </a>
+        <a className="btn ghost small" href="#/settings">
+          <GearIcon width={16} height={16} />
+          {t.navSettings}
+        </a>
+      </div>
+
       {count !== null && count > 0 && <p className="muted">{fill(t.savedCount, { n: count })}</p>}
       <p className="muted">{t.privacy}</p>
     </section>

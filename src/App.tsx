@@ -1,14 +1,16 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useI18n } from './i18n';
 import { useDataVersion, useSyncState } from './sync';
-import { BookIcon, ChecklistIcon, CloudIcon } from './icons';
+import { BookIcon, ChecklistIcon, CloudIcon, GearIcon, TargetIcon } from './icons';
 import { Home } from './screens/Home';
 import { Write } from './screens/Write';
 import { History } from './screens/History';
 import { Tasks } from './screens/Tasks';
+import { Habits } from './screens/Habits';
+import { Settings } from './screens/Settings';
 import { Sync } from './screens/Sync';
 
-/** Tiny hash router: #/ , #/write , #/write/2026-01-31 , #/history , #/tasks , #/tasks/2026-01-31 , #/sync */
+/** Tiny hash router: #/ , #/write , #/history , #/tasks , #/habits , #/settings , #/sync */
 function useRoute(): [string, string | undefined] {
   const [hash, setHash] = useState(location.hash);
   useEffect(() => {
@@ -28,8 +30,15 @@ export function App() {
   const date = arg && /^\d{4}-\d{2}-\d{2}$/.test(arg) ? arg : undefined;
 
   const navIcon = (href: string, current: boolean, label: string, icon: ReactNode, extra?: ReactNode) => (
-    <a className="icon-btn" href={href} aria-label={label} title={label} aria-current={current ? 'page' : undefined}>
-      {icon}{extra}
+    <a
+      className="icon-btn"
+      href={href}
+      aria-label={label}
+      title={label}
+      aria-current={current ? 'page' : undefined}
+    >
+      {icon}
+      {extra}
     </a>
   );
   const dot = sync.error ? 'err' : sync.busy ? 'busy' : sync.email ? 'on' : '';
@@ -41,8 +50,14 @@ export function App() {
         <nav>
           {navIcon('#/history', page === 'history' || page === 'write', t.history, <BookIcon />)}
           {navIcon('#/tasks', page === 'tasks', t.navTasks, <ChecklistIcon />)}
+          {navIcon('#/habits', page === 'habits', t.navHabits, <TargetIcon />)}
           {navIcon('#/sync', page === 'sync', t.navSync, <CloudIcon />, sync.enabled ? <span className={`dot ${dot}`} /> : null)}
-          <button className="btn ghost small" onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}>
+          {navIcon('#/settings', page === 'settings', t.navSettings, <GearIcon />)}
+          <button
+            className="btn ghost small"
+            onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+            title={t.otherLang}
+          >
             {t.otherLang}
           </button>
         </nav>
@@ -51,6 +66,8 @@ export function App() {
         {page === 'write' ? <Write key={date ?? 'today'} initialDate={date} />
           : page === 'history' ? <History key={version} />
           : page === 'tasks' ? <Tasks date={date} />
+          : page === 'habits' ? <Habits key={version} />
+          : page === 'settings' ? <Settings />
           : page === 'sync' ? <Sync />
           : <Home key={version} />}
       </main>

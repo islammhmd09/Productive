@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { SyncEngine } from '../src/syncCore.ts';
 import { appliesTo, buildSections, progress, shiftDate, statusOn, withStatus } from '../src/taskUtils.ts';
+import { calculateHabitStreaks, isHabitDone, toggleHabitStatus } from '../src/habitUtils.ts';
 
 const T0 = Date.now() - 24 * 3600 * 1000; // records are "yesterday"; deletes use the real clock
 const at = (min) => new Date(T0 + min * 60000).toISOString();
@@ -156,4 +157,33 @@ await test('shiftDate crosses month, year and DST boundaries', () => {
   assert.equal(shiftDate('2028-02-28', 1), '2028-02-29');
   assert.equal(shiftDate('2030-03-31', 1), '2030-04-01');
 });
+console.log('habit logic');
+await test('isHabitDone and toggleHabitStatus properly track completion', () => {
+  const h0 = { id: 'h1', name: 'Exercise', color: '#22c55e', icon: '🏃', createdAt: at(0), updatedAt: at(0), log: {} };
+  assert.equal(isHabitDone(h0, '2030-06-01'), false);
+  const h1 = toggleHabitStatus(h0, '2030-06-01');
+  assert.equal(isHabitDone(h1, '2030-06-01'), true);
+  const h2 = toggleHabitStatus(h1, '2030-06-01');
+  assert.equal(isHabitDone(h2, '2030-06-01'), false);
+});
+await test('calculateHabitStreaks computes continuous and longest streak correctly', () => {
+  const h = {
+    id: 'h2', name: 'Read', color: '#3b82f6', icon: '📚', createdAt: at(0), updatedAt: at(0),
+    log: {
+      '2030-06-01': true,
+      '2030-06-02': true,
+      '2030-06-03': true,
+      '2030-06-05': true,
+      '2030-06-06': true,
+    },
+  };
+  const s1 = calculateHabitStreaks(h, '2030-06-06');
+  assert.equal(s1.current, 2);
+  assert.equal(s1.longest, 3);
+
+  // If today is not done yet, streak checks yesterday
+  const s2 = calculateHabitStreaks(h, '2030-06-07');
+  assert.equal(s2.current, 2);
+});
+
 console.log(`\n${passed} tests passed`);
